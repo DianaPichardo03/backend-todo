@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <TITLE>ToDo App</TITLE>
+
+<style>
+
+body{
+  font-family: Arial, sans-serif; 
+  background: #f4f6f8; 
+
+  display: flex;
+  justify-content: center;
+
+  
+  padding-top: 40px;
+}
+
+.container {
+  background: white; 
+  padding: 20px; 
+  width: 400px; 
+  border-radius: 10px; 
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center; 
+}
+
+input {
+  width: 70%; 
+  padding: 8px; 
+}
+
+
+button {
+  padding: 8px; 
+  cursor: pointer; 
+
+  background: #4CAF50; 
+  color: white; 
+
+  border: none; 
+  margin-left: 5px; 
+}
+
+
+ul {
+  list-style: none; 
+  padding: 0; 
+  margin-top: 20px; 
+}
+
+
+li {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+
+  background: #f1f1f1; 
+  padding: 10px; 
+  margin-bottom: 8px; 
+  border-radius: 5px; 
+}
+
+  .done {
+    text-decoration: line-through; 
+    color: gray; 
+  }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <h1>📝 Mis Tareas</h1>
+
+   
+    <input id="tarea" placeholder="Escribe una tarea">
+    <button onclick="agregarTarea()">Agregar</button>
+
+    
+    <ul id="lista"></ul>
+
+  </div>
+    
+    <script>
+        
+        const API = "http://localhost:3000";
+
+  
+        async function cargarTareas(){
+            
+          const res = await fetch(`${API}/tareas`);
+          const data = await res.json();
+          const lista = document.getElementById("lista");
+            
+            lista.innerHTML = "";
+
+            data.forEach(t => {
+                const li = document.createElement("li");
+
+               const texto = document.createElement("span");
+               texto.textContent = t.titulo;
+
+              if (t.hecha){ 
+                texto.classList.add("done");
+              }
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+
+                checkbox.checked = t.hecha;
+
+                checkbox.onchange = async () => {
+
+                  await fetch(`${API}/tareas/${t.id}`, {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    hecha: checkbox.checked 
+                  })
+                });
+
+                cargarTareas(); 
+              };
+           
+        const btn = document.createElement("button");
+        btn.textContent = "Eliminar";
+
+        btn.onclick = async () => {
+
+          await fetch(`${API}/tareas/${t.id}`, {
+            method: "DELETE"
+          });
+
+          cargarTareas();
+        };
+
+        li.appendChild(checkbox);
+        li.appendChild(texto);
+        li.appendChild(btn);
+
+        lista.appendChild(li);
+      });
+    }
+
+    async function agregarTarea() {
+
+      const input = document.getElementById("tarea");
+
+      const texto = input.value.trim();
+
+      if (!texto) return;
+
+      await fetch(`${API}/tareas`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          titulo: texto
+        })
+      });
+
+      input.value = "";
+      cargarTareas();
+    }
+    cargarTareas();
+
+  </script>
+
+</body>
+</html>
+
+   
