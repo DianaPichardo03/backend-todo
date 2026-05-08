@@ -1,5 +1,5 @@
 require('dotenv').config(); 
-
+console.log("🔥 APP INICIANDO");
 const express = require("express");
 const mysql = require('mysql2');  
 const cors = require("cors");
@@ -21,7 +21,7 @@ console.log("DB_HOST:", process.env.DB_HOST);
 console.log("DB_USER:", process.env.DB_USER);
 
 app.get("/", (req, res) => {
-  res.send("🚀 API To-Do List funcionando correctamente");
+  res.json({ ok: true, message: "API funcionando" });
 });
 app.get('/tareas', async (req, res) => {
      
