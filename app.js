@@ -20,6 +20,9 @@ const db = mysql.createPool({
 console.log("DB_HOST:", process.env.DB_HOST);
 console.log("DB_USER:", process.env.DB_USER);
 
+app.get("/", (req, res) => {
+  res.send("🚀 API To-Do List funcionando correctamente");
+});
 app.get('/tareas', async (req, res) => {
      
       try {
