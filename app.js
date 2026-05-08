@@ -1,21 +1,24 @@
-
-const express = require('express');
-const mysql = require('mysql2');  
-const cors = require('cors'); 
 require('dotenv').config(); 
+
+const express = require("express");
+const mysql = require('mysql2');  
+const cors = require("cors");
+
 const app = express();
 
-app.use(cors()); 
-app.use(express.json()); 
-
+app.use(cors());
+app.use(express.json());
 
 const db = mysql.createPool({
-    host: process.env.DB_HOST,        
-    user: process.env.DB_USER,       
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME    
-}) .promise(); 
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+}).promise();
 
+console.log("DB_HOST:", process.env.DB_HOST);
+console.log("DB_USER:", process.env.DB_USER);
 
 app.get('/tareas', async (req, res) => {
      
@@ -28,7 +31,6 @@ app.get('/tareas', async (req, res) => {
     res.status(500).json({ error: "Error en servidor" });
   }
 });
-
 
 app.post('/tareas', async (req, res) => {
     
