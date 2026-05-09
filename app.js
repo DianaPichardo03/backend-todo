@@ -1,149 +1,106 @@
-require('dotenv').config(); 
+const API = "https://backend-todo-3d74.onrender.com";
 
-console.log("🔥 APP INICIANDO");
+async function cargarTareas() {
 
-const express = require("express");
-const mysql = require('mysql2');  
-const cors = require("cors");
+  const res = await fetch(`${API}/tareas`);
+  const data = await res.json();
 
-const app = express();
+  const lista = document.getElementById("lista");
 
-app.use(cors());
-app.use(express.json());
+  lista.innerHTML = "";
 
-const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-}).promise();
+  data.forEach(t => {
 
-console.log("DB_HOST:", process.env.DB_HOST);
-console.log("DB_USER:", process.env.DB_USER);
+    const li = document.createElement("li");
+    const texto = document.createElement("span");
+    texto.textContent = t.titulo;
 
-app.get("/", (req, res) => {
-  res.json({ ok: true, message: "API funcionando" });
-});
-app.get('/tareas', async (req, res) => {
-     
-      try {
-    const [rows] = await db.query('SELECT * FROM tareas');
-    res.json(rows);
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error en servidor" });
-  }
-});
-
-app.post('/tareas', async (req, res) => {
-    
-    try {
-    const { titulo } = req.body;
-
-
-    if (!titulo || !titulo.trim()) {
-        return res.status(400).json({ error: "Título vacío" });
-    }
-       
-    const [result] = await db.query(
-      'INSERT INTO tareas (titulo) VALUES (?)',
-      [titulo]
-    );
-
-    res.json({
-      id: result.insertId,
-      titulo
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error en servidor" });
-  }
-});
- 
-
-app.delete('/tareas/:id', async (req, res) => {
-
-    try {
-    const id = req.params.id;
-
-    if (isNaN(id)) {
-      return res.status(400).json({ error: "ID inválido" });
+    if (t.hecha) {
+      texto.classList.add("done");
     }
 
-    const [result] = await db.query(
-      'DELETE FROM tareas WHERE id = ?',
-      [id]
-    );
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = t.hecha;
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "No existe" });
-    }
+    checkbox.onchange = async () => {
 
-    res.json({ mensaje: "Eliminado" });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error en servidor" });
-  }
-});
-
-
-app.put('/tareas/:id', async (req, res) => {
- try {
-    const id = req.params.id;
-    const { titulo, hecha } = req.body;
-
-    if (isNaN(id)) {
-      return res.status(400).json({ error: "ID inválido" });
-    }
-
-    if (titulo !== undefined){
-      if (!titulo.trim()){
-        return res.status(400).json({
-          error: "Títuo vacío"
-        });
-      }
-      const [result] = await db.query(
-        'UPDATE tareas SET titulo = ? WHERE id = ?',
-        [titulo, id]
-      );
-      if (result.affectedTRows === 0){
-        return res.status(404).json({
-          error: "No existe"
-        });
-      }
-      return res.json({
-        mensaje: "Título actualizado"
+      await fetch(`${API}/tareas/${t.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          hecha: checkbox.checked
+        })
       });
-    }
 
-    if (typeof hecha === "boolean") {
-    const [result] = await db.query(
-      'UPDATE tareas SET hecha = ? WHERE id = ?',
-      [hecha, id]
-    );
+      cargarTareas();
+    };
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "No existe" });
-    }
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Editar";
 
-    res.json({ mensaje: "Actualizado" });
-  } 
-  return res.status(400).json({
-    error: "Datos inválidos"
+    editBtn.onclick = async () => {
+
+      const nuevoTitulo = prompt("Editar tarea:", t.titulo);
+
+      if (!nuevoTitulo) return;
+
+      await fetch(`${API}/tareas/${t.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          titulo: nuevoTitulo
+        })
+      });
+
+      cargarTareas();
+    };
+
+    const btn = document.createElement("button");
+    btn.textContent = "Eliminar";
+
+    btn.onclick = async () => {
+
+      await fetch(`${API}/tareas/${t.id}`, {
+        method: "DELETE"
+      });
+
+      cargarTareas();
+    };
+
+    // AGREGAR AL HTML
+    li.appendChild(checkbox);
+    li.appendChild(texto);
+    li.appendChild(editBtn);
+    li.appendChild(btn);
+
+    lista.appendChild(li);
+  });
+}
+
+async function agregarTarea() {
+
+  const input = document.getElementById("tarea");
+  const texto = input.value.trim();
+
+  if (!texto) return;
+
+  await fetch(`${API}/tareas`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      titulo: texto
+    })
   });
 
-  }catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error en servidor" });
-  }
-});
+  input.value = "";
+  cargarTareas();
+}
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-   
-    console.log(`Servidor corriendo en puerto ${PORT}`);
-});
+cargarTareas();
