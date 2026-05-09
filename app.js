@@ -1,5 +1,7 @@
 require('dotenv').config(); 
+
 console.log("🔥 APP INICIANDO");
+
 const express = require("express");
 const mysql = require('mysql2');  
 const cors = require("cors");
@@ -92,16 +94,33 @@ app.delete('/tareas/:id', async (req, res) => {
 app.put('/tareas/:id', async (req, res) => {
  try {
     const id = req.params.id;
-    const { hecha } = req.body;
+    const { titulo, hecha } = req.body;
 
     if (isNaN(id)) {
       return res.status(400).json({ error: "ID inválido" });
     }
 
-    if (typeof hecha !== "boolean") {
-      return res.status(400).json({ error: "Valor inválido" });
+    if (titulo !== undefined){
+      if (!titulo.trim()){
+        return res.status(400).json({
+          error: "Títuo vacío"
+        });
+      }
+      const [result] = await db.query(
+        'UPDATE tareas SET titulo = ? WHERE id = ?',
+        [titulo, id]
+      );
+      if (result.affectedTRows === 0){
+        return res.status(404).json({
+          error: "No existe"
+        });
+      }
+      return res.json({
+        mensaje: "Título actualizado"
+      });
     }
 
+    if (typeof hecha === "boolean") {
     const [result] = await db.query(
       'UPDATE tareas SET hecha = ? WHERE id = ?',
       [hecha, id]
@@ -112,8 +131,12 @@ app.put('/tareas/:id', async (req, res) => {
     }
 
     res.json({ mensaje: "Actualizado" });
+  } 
+  return res.status(400).json({
+    error: "Datos inválidos"
+  });
 
-  } catch (err) {
+  }catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error en servidor" });
   }

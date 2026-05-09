@@ -13,7 +13,7 @@ body{
   display: flex;
   justify-content: center;
 
-  
+
   padding-top: 40px;
 }
 
@@ -45,6 +45,7 @@ button {
 
   border: none; 
   margin-left: 5px; 
+  border-radius: 5px;
 }
 
 
@@ -130,7 +131,28 @@ li {
 
                 cargarTareas(); 
               };
-           
+         
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Editar";
+        editBtn.onclick = async () => {
+          const nuevoTitulo = prompt(
+            "Editar tarea",
+            t.titulo
+          );
+          if (!nuevoTitulo) return;
+          await fetch(`${API}/tareas/${t.id}`, {
+            method: "PUT",
+            headers:{
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              titulo: nuevoTitulo
+            })
+        });
+
+        cargarTareas();
+      };
+
         const btn = document.createElement("button");
         btn.textContent = "Eliminar";
 
