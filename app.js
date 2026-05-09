@@ -65,6 +65,11 @@ async function cargarTareas() {
     btn.classList.add("btn-delete"); 
     btn.onclick = async () => {
 
+      const confirmar = confirm(
+    "¿Seguro que quieres eliminar esta tarea?"
+  );
+    if (!confirmar) return;
+    
       await fetch(`${API}/tareas/${t.id}`, {
         method: "DELETE"
       });
