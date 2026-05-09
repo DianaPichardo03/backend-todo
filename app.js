@@ -1,9 +1,22 @@
 const API = "https://backend-todo-3d74.onrender.com";
 
+let tareasGlobal = [];
+let filtroActual = "todas";
+
 async function cargarTareas() {
 
   const res = await fetch(`${API}/tareas`);
-  const data = await res.json();
+  tareasGlobal = await res.json();
+  renderizar();
+}
+function renderizar() {
+  let data = tareasGlobal;
+  if (filtroActual === "pendientes") {
+      data = data.filter(t => !t.hecha);
+  }
+    if (filtroActual === "completadas") {
+ data = data.filter(t => t.hecha);
+  }
 
   const lista = document.getElementById("lista");
 
@@ -12,40 +25,39 @@ async function cargarTareas() {
   data.forEach(t => {
 
     const li = document.createElement("li");
+
+    const total = data.length;
     const texto = document.createElement("span");
     texto.textContent = t.titulo;
-
     if (t.hecha) {
       texto.classList.add("done");
     }
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = t.hecha;
+     const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = t.hecha;
 
     checkbox.onchange = async () => {
-
-      await fetch(`${API}/tareas/${t.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          hecha: checkbox.checked
+    await fetch(`${API}/tareas/${t.id}`, {
+      method: "PUT",
+     headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+       hecha: checkbox.checked
         })
       });
-
-      cargarTareas();
+    cargarTareas();
     };
+
 
     const editBtn = document.createElement("button");
     editBtn.textContent = "✏️";
     editBtn.classList.add("btn-edit")
     editBtn.onclick = async () => {
 
-      const nuevoTitulo = prompt("Editar tarea:", t.titulo);
+      const nuevo = prompt("Editar tarea:", t.titulo);
 
-      if (!nuevoTitulo) return;
+      if (!nuevo) return;
 
       await fetch(`${API}/tareas/${t.id}`, {
         method: "PUT",
@@ -69,7 +81,7 @@ async function cargarTareas() {
     "¿Seguro que quieres eliminar esta tarea?"
   );
     if (!confirmar) return;
-    
+
       await fetch(`${API}/tareas/${t.id}`, {
         method: "DELETE"
       });
@@ -85,6 +97,23 @@ async function cargarTareas() {
 
     lista.appendChild(li);
   });
+
+  const total = tareasGlobal.length;
+  const completadas =
+    tareasGlobal.filter(t => t.hecha).length;
+    const pendientes =
+    total - completadas;
+
+    document.getElementById("total").textContent =
+    `Total: ${total}`;
+    document.getElementById("completadas").textContent =
+    `Completadas: ${completadas}`;
+      document.getElementById("pendientes").textContent =
+    `Pendientes: ${pendientes}`;
+}
+function filtro(tipo) {
+  filtroActual = tipo;
+   renderizar();
 }
 
 async function agregarTarea() {

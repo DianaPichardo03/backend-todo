@@ -8,6 +8,11 @@
    <title>📝 Tareas</title>
      <link rel="stylesheet" href="style.css">
 
+     <div class="contador">
+    <p id="total">Total: 0</p>
+    <p id="pendientes">Pendientes: 0</p>
+    <p id="completadas">Completadas: 0</p>
+</div>
 </head>
 
 <body>
@@ -20,6 +25,12 @@
       <button onclick="agregarTarea()">Agregar</button>
 
    </div>
+   <div class="filtros">
+  <button onclick="filtro('todas')">Todas</button>
+  <button onclick="filtro('pendientes')">Pendientes</button>
+  <button onclick="filtro('completadas')">Completadas</button>
+</div>
+
     <ul id="lista"></ul>
 <footer class="footer">
       Elaborado por Diana Pichardo
