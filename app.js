@@ -39,8 +39,8 @@ async function cargarTareas() {
     };
 
     const editBtn = document.createElement("button");
-    editBtn.textContent = "Editar";
-
+    editBtn.textContent = "✏️";
+    editBtn.classList.add("btn-edit")
     editBtn.onclick = async () => {
 
       const nuevoTitulo = prompt("Editar tarea:", t.titulo);
@@ -61,8 +61,8 @@ async function cargarTareas() {
     };
 
     const btn = document.createElement("button");
-    btn.textContent = "Eliminar";
-
+    btn.textContent = "🗑️";
+    btn.classList.add("btn-delete"); 
     btn.onclick = async () => {
 
       await fetch(`${API}/tareas/${t.id}`, {

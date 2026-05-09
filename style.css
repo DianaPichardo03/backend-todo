@@ -30,16 +30,26 @@ input {
 }
 
 button {
-  padding: 8px 12px;
+  padding: 6px 10px;
   cursor: pointer;
-  background: #4CAF50;
-  color: white;
   border: none;
   border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  transition: 0.2s;
+}
+.btn-edit {
+  background: #2196F3;
+}
+button:hover {
+  background: #1976D2;
+}
+.btn-delete {
+  background: #f44336;
 }
 
-button:hover {
-  background: #45a049;
+.btn-delete:hover {
+  background: #d32f2f;
 }
 
 ul {
