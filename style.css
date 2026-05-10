@@ -31,18 +31,6 @@ input {
   border-radius: 6px;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 button {
   padding: 6px 10px;
   cursor: pointer;
@@ -50,22 +38,19 @@ button {
   border-radius: 6px;
   color: white;
   font-size: 14px;
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
 
-.btn-add {
-  background: #4CAF50;
-
+.btn-add { 
+    background: #4CAF50; 
+}
+.btn-add:hover { 
+    background: #45a049; 
+    transform: scale(1.05);
 }
 
-
-.btn-add:hover {
-  background: #45a049;
-  transform: scale(1.05);
-}
-
-.btn-edit {
-  background: #2196F3;
+.btn-edit { 
+    background: #2196F3; 
 }
 
 .btn-edit:hover {
@@ -77,9 +62,16 @@ button {
     background: #f44336; 
 }
 
-.btn-delete:hover {
-  background: #d32f2f;
-  transform: scale(1.05);
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 ul {
@@ -106,7 +98,7 @@ li {
 li:hover {
   transform: scale(1.01);
   background: #eaeaea;
-  
+
 }
 
 .done {
@@ -131,6 +123,7 @@ li:hover {
 
 .filtros button:hover {
   background: #ddd;
+  transform: translateY(-2px);
 }
 
 .filtros span {

@@ -1,182 +1,123 @@
-const API = "https://backend-todo-3d74.onrender.com";
+require("dotenv").config();
+const express = require("express");
+const mysql = require("mysql2");
+const cors = require("cors");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
-let tareasGlobal = [];
-let filtroActual = "todas";
+const app = express();
 
-function getToken() {
-  return localStorage.getItem("token");
-}
+app.use(cors());
+app.use(express.json());
 
-function authHeaders() {
-  return {
-    "Content-Type": "application/json",
-    "Authorization": getToken()
-  };
-}
+const db = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+}).promise();
+function auth(req, res, next) {
 
-async function login() {
+  const token = req.headers.authorization;
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  if (!token) return res.status(401).json({ error: "Sin token" });
 
-  const res = await fetch(`${API}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
-  });
-
-    const data = await res.json();
-
-  if (data.token) {
-    localStorage.setItem("token", data.token);
-    alert("Login exitoso 😎");
-    cargarTareas();
-  } else {
-    alert("Error de login");
+  try {
+    const data = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = data;
+    next();
+  } catch {
+      return res.status(401).json({ error: "Token inválido" });
   }
 }
+app.post("/register", async (req, res) => {
 
-async function cargarTareas() {
+  const { nombre, email, password } = req.body;
 
-  const res = await fetch(`${API}/tareas`,{
-    headers: authHeaders()
+  const hash = await bcrypt.hash(password, 10);
+
+  await db.query(
+    "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)",
+    [nombre, email, hash]
+  );
+
+  res.json({ message: "Usuario creado" });
 });
-tareasGlobal = await res.json();
+app.post("/login", async (req, res) => {
 
-  renderizar();
-}
+  const { email, password } = req.body;
 
-function renderizar() {
-  let data = tareasGlobal;
-  if (filtroActual === "pendientes") {
-      data = data.filter(t => !t.hecha);
+  const [rows] = await db.query(
+    "SELECT * FROM usuarios WHERE email = ?",
+    [email]
+  );
+
+  if (rows.length === 0) {
+    return res.status(401).json({ error: "Usuario no existe" });
   }
 
-    if (filtroActual === "completadas") {
-     data = data.filter(t => t.hecha);
+  const user = rows[0];
+
+  const ok = await bcrypt.compare(password, user.password);
+
+  if (!ok) {
+    return res.status(401).json({ error: "Password incorrecto" });
   }
 
-  const lista = document.getElementById("lista");
+  const token = jwt.sign(
+    { id: user.id, nombre: user.nombre },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
 
-  lista.innerHTML = "";
+  res.json({ token });
+});
+app.get("/tareas", auth, async (req, res) => {
 
-  data.forEach(t => {
+  const [rows] = await db.query(
+    "SELECT * FROM tareas WHERE user_id = ?",
+    [req.user.id]
+  );
 
-    const li = document.createElement("li");
-    li.style.animation = "fadeIn 0.3s ease";
+  res.json(rows);
+});
 
-    const texto = document.createElement("span");
-    texto.textContent = t.titulo;
-    if (t.hecha) {
-      texto.classList.add("done");
-  }
+app.post("/tareas", auth, async (req, res) => {
 
-     const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = t.hecha;
+  const { titulo } = req.body;
 
-    checkbox.onchange = async () => {
+  const [result] = await db.query(
+    "INSERT INTO tareas (titulo, user_id) VALUES (?, ?)",
+    [titulo, req.user.id]
+  );
+res.json({ id: result.insertId, titulo });
+});
 
-    await fetch(`${API}/tareas/${t.id}`, {
-      method: "PUT",
-     headers: authHeaders(),
-      body: JSON.stringify({
-       hecha: checkbox.checked
-        })
-      });
+app.put("/tareas/:id", auth, async (req, res) => {
 
-    cargarTareas();
-    };
+  const { id } = req.params;
+  const { titulo, hecha } = req.body;
 
+  await db.query(
+    "UPDATE tareas SET titulo = COALESCE(?, titulo), hecha = COALESCE(?, hecha) WHERE id = ? AND user_id = ?",
+    [titulo, hecha, id, req.user.id]
+  );
 
-    const editBtn = document.createElement("button");
-    editBtn.textContent = "✏️";
-    editBtn.classList.add("btn-edit")
+  res.json({ message: "Actualizado" });
+});
 
-    editBtn.onclick = async () => {
+app.delete("/tareas/:id", auth, async (req, res) => {
 
-      const nuevoTitulo = prompt("Editar tarea:", t.titulo);
+  const { id } = req.params;
 
-      if (!nuevoTitulo || !nuevoTitulo.trim()) return;
+  await db.query(
+    "DELETE FROM tareas WHERE id = ? AND user_id = ?",
+    [id, req.user.id]
+  );
 
-      await fetch(`${API}/tareas/${t.id}`, {
-        method: "PUT",
-        headers: authHeaders(),
-        body: JSON.stringify({
-          titulo: nuevoTitulo
-        })
-      });
-
-      cargarTareas();
-    };
-
-    const btn = document.createElement("button");
-    btn.textContent = "🗑️";
-    btn.classList.add("btn-delete"); 
-
-    btn.onclick = async () => {
-
-     li.style.opacity = "0";
-     li.style.transform = "translateX(20px)";
-     li.style.transition = "0.3s";
-
-      setTimeout(async () => {
-
-      await fetch(`${API}/tareas/${t.id}`, {
-        method: "DELETE",
-        headers: authHeaders()
-      });
-
-      cargarTareas();
-    }, 300);
-  };
-
-    li.appendChild(checkbox);
-    li.appendChild(texto);
-    li.appendChild(editBtn);
-    li.appendChild(btn);
-
-    lista.appendChild(li);
-  });
-
-  const total = tareasGlobal.length;
-  const completadas =
-    tareasGlobal.filter(t => t.hecha).length;
-    const pendientes =
-    total - completadas;
-
-document.getElementById("total").textContent =
-  total;
-
-document.getElementById("pendientes").textContent =
-  pendientes;
-
-document.getElementById("completadas").textContent =
-  completadas;
-}
-
-function filtro(tipo) {
-  filtroActual = tipo;
-   renderizar();
-}
-
-async function agregarTarea() {
-
-  const input = document.getElementById("tarea");
-  const texto = input.value.trim();
-
-  if (!texto) return;
-
-  await fetch(`${API}/tareas`, {
-    method: "POST",
-    headers: authHeaders(),
-    body: JSON.stringify({
-      titulo: texto
-    })
-  });
-
-  input.value = "";
-  cargarTareas();
-}
-
-cargarTareas();
+  res.json({ message: "Eliminado" });
+});
+ app.listen(process.env.PORT || 3000, () => {
+  console.log("Servidor corriendo 🚀");
+});
