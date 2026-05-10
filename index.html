@@ -12,12 +12,17 @@
 <body>
    <div class="container">
     <h1>📝 Mis Tareas</h1>
-    
- <div class="login-box">
-    <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-    <button onclick="login()" class="btn-add">Login</button>
-  </div>
+
+ <div id="loginBox" class="login-box">
+
+  <h3>🔐 Login</h3>
+
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button class="btn-add" onclick="login()">Entrar</button>
+
+</div>
 
      <div class="input-group">
       <input id="tarea" placeholder="Escribe una tarea" autocomplete="off">

@@ -17,12 +17,24 @@ const db = mysql.createPool({
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
 }).promise();
+
+app.get("/", (req, res) => {
+
+  res.json({
+    ok: true,
+    message: "API funcionando 🚀"
+  });
+
+});
+
 function auth(req, res, next) {
 
   const token = req.headers.authorization;
 
-  if (!token) return res.status(401).json({ error: "Sin token" });
-
+  if (!token) {
+    return res.status(401).json
+  ({ error: "Sin token" });
+}
   try {
     const data = jwt.verify(token, process.env.JWT_SECRET);
     req.user = data;
@@ -32,9 +44,16 @@ function auth(req, res, next) {
   }
 }
 app.post("/register", async (req, res) => {
-
+try{
   const { nombre, email, password } = req.body;
 
+  if (!nombre || !email || !password) {
+
+      return res.status(400).json({
+        error: "Campos incompletos"
+      });
+
+    }
   const hash = await bcrypt.hash(password, 10);
 
   await db.query(
@@ -42,9 +61,23 @@ app.post("/register", async (req, res) => {
     [nombre, email, hash]
   );
 
-  res.json({ message: "Usuario creado" });
+  res.json({ message: "Usuario creado ✅" 
 });
+} catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      error: "Error servidor"
+    });
+
+  }
+
+});
+
 app.post("/login", async (req, res) => {
+
+  try {
 
   const { email, password } = req.body;
 
@@ -62,7 +95,8 @@ app.post("/login", async (req, res) => {
   const ok = await bcrypt.compare(password, user.password);
 
   if (!ok) {
-    return res.status(401).json({ error: "Password incorrecto" });
+    return res.status(401).json({ 
+      error: "Password incorrecto" });
   }
 
   const token = jwt.sign(
@@ -72,8 +106,19 @@ app.post("/login", async (req, res) => {
   );
 
   res.json({ token });
+} catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      error: "Error servidor"
+    });
+
+  }
+
 });
 app.get("/tareas", auth, async (req, res) => {
+ try{
 
   const [rows] = await db.query(
     "SELECT * FROM tareas WHERE user_id = ?",
@@ -81,21 +126,50 @@ app.get("/tareas", auth, async (req, res) => {
   );
 
   res.json(rows);
+ } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      error: "Error servidor"
+    });
+
+  }
+
 });
 
 app.post("/tareas", auth, async (req, res) => {
+try{
 
   const { titulo } = req.body;
+if (!titulo || !titulo.trim()) {
 
+      return res.status(400).json({
+        error: "Título vacío"
+      });
+
+    }
+    
   const [result] = await db.query(
     "INSERT INTO tareas (titulo, user_id) VALUES (?, ?)",
     [titulo, req.user.id]
   );
 res.json({ id: result.insertId, titulo });
+} catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      error: "Error servidor"
+    });
+
+  }
+
 });
 
 app.put("/tareas/:id", auth, async (req, res) => {
 
+  try{
   const { id } = req.params;
   const { titulo, hecha } = req.body;
 
@@ -104,11 +178,22 @@ app.put("/tareas/:id", auth, async (req, res) => {
     [titulo, hecha, id, req.user.id]
   );
 
-  res.json({ message: "Actualizado" });
+  res.json({ message: "Actualizado ✅" });
+
+   } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      error: "Error servidor"
+    });
+
+  }
+
 });
 
 app.delete("/tareas/:id", auth, async (req, res) => {
-
+try{
   const { id } = req.params;
 
   await db.query(
@@ -116,7 +201,17 @@ app.delete("/tareas/:id", auth, async (req, res) => {
     [id, req.user.id]
   );
 
-  res.json({ message: "Eliminado" });
+  res.json({ message: "Eliminado🗑️" });
+} catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      error: "Error servidor"
+    });
+
+  }
+
 });
  app.listen(process.env.PORT || 3000, () => {
   console.log("Servidor corriendo 🚀");
