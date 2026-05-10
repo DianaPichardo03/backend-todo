@@ -90,11 +90,16 @@ li {
   border-radius: 6px;
 
   transition: 0.2s;
+  gap: 10px;
 }
 
 li:hover {
   transform: scale(1.01);
   background: #eaeaea;
+}
+
+li button {
+  margin-left: 5px;
 }
 
 .done {
