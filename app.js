@@ -25,6 +25,7 @@ function renderizar() {
   data.forEach(t => {
 
     const li = document.createElement("li");
+    li.style.animation = "fadeIn 0.3s ease";
 
     const texto = document.createElement("span");
     texto.textContent = t.titulo;
@@ -75,6 +76,10 @@ function renderizar() {
     btn.textContent = "🗑️";
     btn.classList.add("btn-delete"); 
     btn.onclick = async () => {
+
+     li.style.opacity = "0";
+     li.style.transform = "translateX(20px)";
+     li.style.transition = "0.3s";
 
       const ok = confirm(
     "¿Seguro que quieres eliminar esta tarea?"
