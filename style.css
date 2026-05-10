@@ -78,23 +78,23 @@ ul {
   margin-top: 20px;
 }
 
+
 li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: #f1f1f1;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+
   transition: 0.2s;
 }
 
 li:hover {
   transform: scale(1.01);
   background: #eaeaea;
-}
-
-li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #f1f1f1;
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 6px;
 }
 
 .done {
