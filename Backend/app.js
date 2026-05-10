@@ -51,7 +51,9 @@ function auth(req, res, next) {
 }
 app.post("/register", async (req, res) => {
 try{
-  const { nombre, email, password } = req.body;
+  const nombre = req.body.nombre.trim();
+  const email = req.body.email.trim().toLowerCase();
+  const password = req.body.password.trim();
 
   if (!nombre || !email || !password) {
 
@@ -70,7 +72,7 @@ try{
   res.json({ message: "Usuario creado ✅" 
 });
 } catch (err) {
-  
+   console.log(err);
   if (err.code === "ER_DUP_ENTRY") {
       return res.status(400).json({ error: "Ese email ya existe" });
     }
@@ -82,7 +84,8 @@ app.post("/login", async (req, res) => {
 
   try {
 
-  const { email, password } = req.body;
+  const email = req.body.email.trim().toLowerCase();
+  const password = req.body.password.trim();
 
   const [rows] = await db.query(
     "SELECT * FROM usuarios WHERE email = ?",
@@ -95,8 +98,14 @@ app.post("/login", async (req, res) => {
 
   const user = rows[0];
 
-  const ok = await bcrypt.compare(password, user.password);
+    console.log("PASSWORD FRONT:", password);
+    console.log("PASSWORD DB:", user.password);
 
+  const ok = await bcrypt.compare(
+    String(password),
+    String(user.password)
+    );
+    console.log("COMPARE:", ok);
   if (!ok) {
     return res.status(401).json({ 
       error: "Password incorrecto" });
