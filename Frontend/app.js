@@ -9,7 +9,7 @@ function getToken() {
 function authHeaders() {
   return {
     "Content-Type": "application/json",
-    "Authorization": getToken()
+    "Authorization": `Bearer ${getToken()}`
   };
 }
 async function login() {
@@ -38,13 +38,17 @@ async function login() {
 
 }
 async function cargarTareas() {
-
+  const token = getToken();
+  if (!token) {
+    document.getElementById("loginBox").style.display = "block";
+    return;
+  }
   const res = await fetch(`${API}/tareas`, {
     headers: authHeaders()
   });
 
   if (!res.ok) {
-    tareasGlobal = [];
+    localStorage.removeItem("token");
     document.getElementById("loginBox").style.display = "block";
     return;
   }
@@ -75,9 +79,9 @@ function renderizar() {
 
     const texto = document.createElement("span");
     texto.textContent = t.titulo;
-     if (t.hecha) {
+     if (t.hecha) 
       texto.classList.add("done");
-    }
+    
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -137,14 +141,12 @@ function renderizar() {
     lista.appendChild(li);
 
   });
-  const total = tareasGlobal.length;
-  const completadas = tareasGlobal.filter(t => t.hecha).length;
-  const pendientes = total - completadas;
 
-  document.getElementById("total").textContent = total;
-  document.getElementById("pendientes").textContent = pendientes;
-  document.getElementById("completadas").textContent = completadas;
-
+  document.getElementById("total").textContent = tareasGlobal.length;
+  document.getElementById("pendientes").textContent =
+    tareasGlobal.filter(t => !t.hecha).length;
+  document.getElementById("completadas").textContent =
+    tareasGlobal.filter(t => t.hecha).length;
 }
 function filtro(tipo) {
   filtroActual = tipo;
@@ -167,7 +169,13 @@ async function agregarTarea() {
   cargarTareas();
 
 }
-if (getToken()) {
-  document.getElementById("loginBox").style.display = "none";
-  cargarTareas();
-}
+window.onload = () => {
+  const token = getToken();
+
+  if (token) {
+    document.getElementById("loginBox").style.display = "none";
+    cargarTareas();
+  } else {
+    document.getElementById("loginBox").style.display = "block";
+  }
+};
