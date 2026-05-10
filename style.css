@@ -76,13 +76,26 @@ li {
 }
 
 .contador p {
-    background: #f1f1f1;
-    padding: 10px;
-    border-radius: 8px;
+    padding: 12px;
+    border-radius: 10px;
     text-align: center;
     font-weight: bold;
-    color: #444;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    transition: 0.2s;
+}
+.contador p:hover {
+     transform: translateY(-2px);
+}
+.card-total {
+      background: #2196F3;
+}
+
+.card-pendientes {
+  background: #FF9800;
+}
+.card-completadas {
+  background: #4CAF50;
 }
 
 .done {
