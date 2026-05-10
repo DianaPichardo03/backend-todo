@@ -14,7 +14,13 @@
     <h1>📝 Mis Tareas</h1>
 
  <div id="loginBox" class="login-box">
+<h3>🆕 Registro</h3>
 
+<input id="rnombre" type="text" placeholder="Nombre">
+<input id="remail" type="email" placeholder="Email">
+<input id="rpassword" type="password" placeholder="Password">
+
+<button class="btn-add" onclick="register()">Registrarse</button>
   <h3>🔐 Login</h3>
 
   <input id="email" type="email" placeholder="Email">
@@ -24,10 +30,11 @@
 
 </div>
 
+<div id="app" style="display:none;">
      <div class="input-group">
-      <input id="tarea" placeholder="Escribe una tarea" autocomplete="off">
-      <button class="btn-add" onclick="agregarTarea()">Agregar</button>
-    </div>
+      <input id="tarea">
+    <button onclick="agregarTarea()">Agregar</button>
+  </div>
 
     <div class="filtros">
 
@@ -46,6 +53,7 @@
     </div>
 
     <ul id="lista"></ul>
+</div>
 <footer class="footer">
       Elaborado por ISC Diana Pichardo 🤓
     </footer>
