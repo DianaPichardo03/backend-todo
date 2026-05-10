@@ -7,7 +7,11 @@ const bcrypt = require("bcryptjs");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
 
 const db = mysql.createPool({
@@ -29,19 +33,20 @@ app.get("/", (req, res) => {
 
 function auth(req, res, next) {
 
-  const token = req.headers.authorization;
+  const header = req.headers.authorization;
 
-  if (!token) {
-    return res.status(401).json({ 
-      error: "Sin token" 
-    });
-}
+  if (!header) {
+    return res.status(401).json({ error: "Sin token" });
+  }
+
+  const token = header.split(" ")[1];
+
   try {
     const data = jwt.verify(token, process.env.JWT_SECRET);
     req.user = data;
     next();
   } catch {
-      return res.status(401).json({ error: "Token inválido" });
+    return res.status(401).json({ error: "Token inválido" });
   }
 }
 app.post("/register", async (req, res) => {
@@ -65,16 +70,13 @@ try{
   res.json({ message: "Usuario creado ✅" 
 });
 } catch (err) {
-
-    console.log(err);
-
-    res.status(500).json({
-      error: "Error servidor"
-    });
-
+  
+  if (err.code === "ER_DUP_ENTRY") {
+      return res.status(400).json({ error: "Ese email ya existe" });
+    }
+   res.status(500).json({ error: "Error servidor" });
   }
-
-});
+  });
 
 app.post("/login", async (req, res) => {
 
@@ -119,58 +121,32 @@ app.post("/login", async (req, res) => {
 
 });
 app.get("/tareas", auth, async (req, res) => {
- try{
-
-  const [rows] = await db.query(
+ const [rows] = await db.query(
     "SELECT * FROM tareas WHERE user_id = ?",
     [req.user.id]
   );
 
   res.json(rows);
- } catch (err) {
-
-    console.log(err);
-
-    res.status(500).json({
-      error: "Error servidor"
-    });
-
-  }
-
 });
+ 
 
 app.post("/tareas", auth, async (req, res) => {
-try{
+ const { titulo } = req.body;
 
-  const { titulo } = req.body;
-if (!titulo || !titulo.trim()) {
+  if (!titulo || !titulo.trim()) {
+    return res.status(400).json({ error: "Título vacío" });
+  }
 
-      return res.status(400).json({
-        error: "Título vacío"
-      });
-
-    }
-    
   const [result] = await db.query(
     "INSERT INTO tareas (titulo, user_id) VALUES (?, ?)",
     [titulo, req.user.id]
   );
-res.json({ id: result.insertId, titulo });
-} catch (err) {
 
-    console.log(err);
-
-    res.status(500).json({
-      error: "Error servidor"
-    });
-
-  }
-
+  res.json({ id: result.insertId, titulo });
 });
 
-app.put("/tareas/:id", auth, async (req, res) => {
-
-  try{
+  app.put("/tareas/:id", auth, async (req, res) => {
+  
   const { id } = req.params;
   const { titulo, hecha } = req.body;
 
@@ -180,40 +156,19 @@ app.put("/tareas/:id", auth, async (req, res) => {
   );
 
   res.json({ message: "Actualizado ✅" });
-
-   } catch (err) {
-
-    console.log(err);
-
-    res.status(500).json({
-      error: "Error servidor"
-    });
-
-  }
-
-});
+  });
 
 app.delete("/tareas/:id", auth, async (req, res) => {
-try{
-  const { id } = req.params;
+const { id } = req.params;
 
   await db.query(
     "DELETE FROM tareas WHERE id = ? AND user_id = ?",
     [id, req.user.id]
   );
 
-  res.json({ message: "Eliminado🗑️" });
-} catch (err) {
-
-    console.log(err);
-
-    res.status(500).json({
-      error: "Error servidor"
-    });
-
-  }
-
+  res.json({ message: "Eliminado 🗑️" });
 });
+
  app.listen(process.env.PORT || 3000, () => {
   console.log("Servidor corriendo 🚀");
 });
