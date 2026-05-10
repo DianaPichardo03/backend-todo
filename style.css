@@ -69,35 +69,42 @@ li {
 }
 
 .contador {
-  margin-top: 15px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
+  margin: 15px 0;
 }
 
-.contador p {
-    padding: 12px;
-    border-radius: 10px;
+.contador div{
+    padding: 15px;
+    border-radius: 12px;
     text-align: center;
-    font-weight: bold;
     color: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     transition: 0.2s;
 }
-.contador p:hover {
-     transform: translateY(-2px);
+.contador div:hover {
+  transform: translateY(-3px);
+}
+.contador h2 {
+  margin: 0;
+  font-size: 28px;
+}
+.contador span {
+  font-size: 13px;
+  opacity: 0.9;
 }
 .card-total {
-      background: #2196F3;
+  background: #2196F3;
 }
 
 .card-pendientes {
   background: #FF9800;
 }
+
 .card-completadas {
   background: #4CAF50;
 }
-
 .done {
   text-decoration: line-through;
   color: gray;

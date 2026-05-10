@@ -104,12 +104,14 @@ function renderizar() {
     const pendientes =
     total - completadas;
 
-    document.getElementById("total").textContent =
-    `Total: ${total}`;
-    document.getElementById("completadas").textContent =
-    `Completadas: ${completadas}`;
-      document.getElementById("pendientes").textContent =
-    `Pendientes: ${pendientes}`;
+document.getElementById("total").textContent =
+  total;
+
+document.getElementById("pendientes").textContent =
+  pendientes;
+
+document.getElementById("completadas").textContent =
+  completadas;
 }
 function filtro(tipo) {
   filtroActual = tipo;
