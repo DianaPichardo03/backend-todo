@@ -29,7 +29,7 @@ async function login() {
      localStorage.setItem("token", data.token);
 
     document.getElementById("loginBox").style.display = "none";
-
+    document.getElementById("app").style.display = "block";
     cargarTareas();
 
   } else {
@@ -174,8 +174,10 @@ window.onload = () => {
 
   if (token) {
     document.getElementById("loginBox").style.display = "none";
+    document.getElementById("app").style.display = "block";
     cargarTareas();
   } else {
     document.getElementById("loginBox").style.display = "block";
+    document.getElementById("app").style.display = "block";
   }
 };
