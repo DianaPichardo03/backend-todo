@@ -5,13 +5,7 @@ body {
   justify-content: center;
   padding-top: 40px;
 }
-.container {
-  background: white;
-  padding: 20px;
-  width: 400px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
+
 
 .container {
   background: white;
@@ -56,21 +50,37 @@ button {
   border-radius: 6px;
   color: white;
   font-size: 14px;
+  transition: 0.2s;
 }
 
 .btn-add {
   background: #4CAF50;
-  transition: 0.2s;
+
 }
+
 
 .btn-add:hover {
   background: #45a049;
   transform: scale(1.05);
 }
 
-.btn-edit { background: #2196F3; }
-.btn-delete { background: #f44336; }
+.btn-edit {
+  background: #2196F3;
+}
 
+.btn-edit:hover {
+  background: #1976D2;
+  transform: scale(1.05);
+}
+
+.btn-delete { 
+    background: #f44336; 
+}
+
+.btn-delete:hover {
+  background: #d32f2f;
+  transform: scale(1.05);
+}
 
 ul {
   list-style: none;
@@ -96,10 +106,7 @@ li {
 li:hover {
   transform: scale(1.01);
   background: #eaeaea;
-}
-
-li button {
-  margin-left: 5px;
+  
 }
 
 .done {
@@ -119,6 +126,11 @@ li button {
     color: #333;
     padding: 10px;
     border-radius: 10px;
+    transition: 0.2s;
+}
+
+.filtros button:hover {
+  background: #ddd;
 }
 
 .filtros span {
