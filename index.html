@@ -13,11 +13,6 @@
    <div class="container">
     <h1>📝 Mis Tareas</h1>
 
-     <div class="contador">
-      <div class="card-total">
-    <h2 id="total">0</h2>
-    <span>Total</span>
-  </div>
   <div class="card-pendientes">
     <h2 id="pendientes">0</h2>
     <span>Pendientes</span>
@@ -35,9 +30,28 @@
 
    </div>
    <div class="filtros">
-  <button onclick="filtro('todas')">Todas</button>
-  <button onclick="filtro('pendientes')">Pendientes</button>
-  <button onclick="filtro('completadas')">Completadas</button>
+
+  <button onclick="filtro('todas')">
+
+    Todas
+    <span id="total">0</span>
+
+  </button>
+
+  <button onclick="filtro('pendientes')">
+
+    Pendientes
+    <span id="pendientes">0</span>
+
+  </button>
+
+  <button onclick="filtro('completadas')">
+
+    ✔
+    <span id="completadas">0</span>
+
+  </button>
+
 </div>
 
     <ul id="lista"></ul>

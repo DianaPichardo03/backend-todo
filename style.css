@@ -119,15 +119,33 @@ li {
 
 .filtros {
   display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  gap: 10px;
+  margin: 15px 0;
 }
 
 .filtros button {
-  background: #2196F3;
+   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  background: #f1f1f1;
+  color: #333;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  transition: 0.2s;
 }
 
 .filtros button:hover {
-  background: #1976D2;
+  background: #ddd;
+}
+
+.filtros span {
+  background: #2196F3;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 12px;
 }
