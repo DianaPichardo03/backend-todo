@@ -13,46 +13,26 @@
    <div class="container">
     <h1>📝 Mis Tareas</h1>
 
-  <div class="card-pendientes">
-    <h2 id="pendientes">0</h2>
-    <span>Pendientes</span>
-  </div>
-    <div class="card-completadas">
-    <h2 id="completadas">0</h2>
-    <span>✔</span>
-  </div>
-</div>
-    <div class="input-group">
-
+     <div class="input-group">
       <input id="tarea" placeholder="Escribe una tarea">
-
       <button onclick="agregarTarea()">Agregar</button>
+    </div>
 
-   </div>
-   <div class="filtros">
+    <div class="filtros">
 
-  <button onclick="filtro('todas')">
+      <button onclick="filtro('todas')">
+        Todas <span id="total">0</span>
+      </button>
 
-    Todas
-    <span id="total">0</span>
+ <button onclick="filtro('pendientes')">
+        Pendientes <span id="pendientes">0</span>
+      </button>
 
-  </button>
+      <button onclick="filtro('completadas')">
+        ✔ <span id="completadas">0</span>
+      </button>
 
-  <button onclick="filtro('pendientes')">
-
-    Pendientes
-    <span id="pendientes">0</span>
-
-  </button>
-
-  <button onclick="filtro('completadas')">
-
-    ✔
-    <span id="completadas">0</span>
-
-  </button>
-
-</div>
+    </div>
 
     <ul id="lista"></ul>
 <footer class="footer">

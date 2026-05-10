@@ -15,7 +15,7 @@ function renderizar() {
       data = data.filter(t => !t.hecha);
   }
     if (filtroActual === "completadas") {
- data = data.filter(t => t.hecha);
+     data = data.filter(t => t.hecha);
   }
 
   const lista = document.getElementById("lista");
@@ -26,12 +26,11 @@ function renderizar() {
 
     const li = document.createElement("li");
 
-    const total = data.length;
     const texto = document.createElement("span");
     texto.textContent = t.titulo;
-    if (t.hecha) {
+    if (t.hecha) 
       texto.classList.add("done");
-    }
+    
      const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.checked = t.hecha;
@@ -55,9 +54,9 @@ function renderizar() {
     editBtn.classList.add("btn-edit")
     editBtn.onclick = async () => {
 
-      const nuevo = prompt("Editar tarea:", t.titulo);
+      const nuevoTitulo = prompt("Editar tarea:", t.titulo);
 
-      if (!nuevo) return;
+      if (!nuevoTitulo) return;
 
       await fetch(`${API}/tareas/${t.id}`, {
         method: "PUT",
@@ -77,10 +76,10 @@ function renderizar() {
     btn.classList.add("btn-delete"); 
     btn.onclick = async () => {
 
-      const confirmar = confirm(
+      const ok = confirm(
     "¿Seguro que quieres eliminar esta tarea?"
   );
-    if (!confirmar) return;
+    if (!ok) return;
 
       await fetch(`${API}/tareas/${t.id}`, {
         method: "DELETE"
@@ -89,7 +88,6 @@ function renderizar() {
       cargarTareas();
     };
 
-    // AGREGAR AL HTML
     li.appendChild(checkbox);
     li.appendChild(texto);
     li.appendChild(editBtn);

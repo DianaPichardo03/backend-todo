@@ -13,6 +13,14 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+.container {
+  background: white;
+  padding: 20px;
+  width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
 h1 {
   text-align: center;
 }
@@ -36,21 +44,10 @@ button {
   border-radius: 6px;
   color: white;
   font-size: 14px;
-  transition: 0.2s;
 }
-.btn-edit {
-  background: #2196F3;
-}
-button:hover {
-  background: #1976D2;
-}
-.btn-delete {
-  background: #f44336;
-}
+.btn-edit { background: #2196F3; }
+.btn-delete { background: #f44336; }
 
-.btn-delete:hover {
-  background: #d32f2f;
-}
 
 ul {
   list-style: none;
@@ -68,53 +65,9 @@ li {
   border-radius: 6px;
 }
 
-.contador {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin: 15px 0;
-}
-
-.contador div{
-    padding: 15px;
-    border-radius: 12px;
-    text-align: center;
-    color: white;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    transition: 0.2s;
-}
-.contador div:hover {
-  transform: translateY(-3px);
-}
-.contador h2 {
-  margin: 0;
-  font-size: 28px;
-}
-.contador span {
-  font-size: 13px;
-  opacity: 0.9;
-}
-.card-total {
-  background: #2196F3;
-}
-
-.card-pendientes {
-  background: #FF9800;
-}
-
-.card-completadas {
-  background: #4CAF50;
-}
 .done {
   text-decoration: line-through;
   color: gray;
-}
-
-.footer {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 13px;
-  color: #777;
 }
 
 .filtros {
@@ -124,22 +77,11 @@ li {
 }
 
 .filtros button {
-   flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  background: #f1f1f1;
-  color: #333;
-  border: none;
-  padding: 10px;
-  border-radius: 10px;
-  font-weight: bold;
-  transition: 0.2s;
-}
-
-.filtros button:hover {
-  background: #ddd;
+    flex: 1;
+    background: #f1f1f1;
+    color: #333;
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .filtros span {
@@ -148,4 +90,11 @@ li {
   padding: 2px 8px;
   border-radius: 20px;
   font-size: 12px;
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 13px;
+  color: #777;
 }
