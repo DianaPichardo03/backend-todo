@@ -44,6 +44,7 @@ async function cargarTareas() {
   });
 
   if (!res.ok) {
+    tareasGlobal = [];
     document.getElementById("loginBox").style.display = "block";
     return;
   }
