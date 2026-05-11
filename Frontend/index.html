@@ -11,18 +11,33 @@
 
 <body>
    <div class="container">
-    <h1>📝 Mis Tareas</h1>
+    <div class="top-bar">
 
- <div id="loginBox" class="login-box">
+    <label class="switch">
+      <input type="checkbox" onclick="toggleTheme()" id="themeToggle">
+      <span class="slider">
+        <span class="icon sun">☀️</span>
+        <span class="icon moon">🌙</span>
+      </span>
+    </label>
+
+    <div id="fechaHora"></div>
+
+  </div>
+
+  <h2 id="welcomeMsg"></h2>
+
+    <h1>📝 Mis Tareas</h1>
+   <div id="loginBox" class="login-box">
 <h3>🆕 Registro</h3>
 
 <input id="rnombre" type="text" placeholder="Nombre">
 <input id="remail" type="email" placeholder="Email">
 
- <div style="position: relative;">
+ <div class="password-box">
         <input id="rpassword" type="password" placeholder="Password">
-        <span onclick="togglePassword()" style="position:absolute; right:10px; top:8px; cursor:pointer;">
-          👁️
+       <span class="eye" onclick="togglePassword()">
+            👁️
         </span>
 </div>
 
@@ -30,10 +45,10 @@
   <h3>🔐 Login</h3>
 
   <input id="email" type="email" placeholder="Email">
-  <div style="position: relative;">
+  <div class="password-box">
         <input id="password" type="password" placeholder="Password">
-        <span onclick="toggleLoginPassword()"style="position:absolute; right:10px; top:8px; cursor:pointer;">
-          👁️
+        <span class="eye" onclick="toggleLoginPassword()">
+         👁️
         </span>
       </div>
   <button class="btn-add" onclick="login()">Entrar</button>

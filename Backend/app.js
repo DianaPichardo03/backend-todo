@@ -51,9 +51,9 @@ function auth(req, res, next) {
 }
 app.post("/register", async (req, res) => {
 try{
-  const nombre = req.body.nombre.trim();
-  const email = req.body.email.trim().toLowerCase();
-  const password = req.body.password.trim();
+  const nombre = (req.body.nombre || "").trim();
+const email = (req.body.email || "").trim().toLowerCase();
+const password = (req.body.password || "").trim();
 
   if (!nombre || !email || !password) {
 

@@ -15,9 +15,51 @@ function authHeaders() {
     ...(token && { "Authorization": `Bearer ${token}` })
 };
 }
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+
+  const isDark = document.body.classList.contains("dark");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+}
+
+function loadTheme() {
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+    document.getElementById("themeToggle").checked = true;
+  }
+}
+function actualizarFechaHora() {
+  const ahora = new Date();
+
+  document.getElementById("fechaHora").textContent =
+    ahora.toLocaleString("es-MX", {
+      weekday: "short",
+      day: "2-digit",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+}
+
+function logout() {
+  localStorage.removeItem("token");
+
+  tareasGlobal = [];
+
+  document.getElementById("lista").innerHTML = "";
+
+  document.getElementById("welcomeMsg").textContent = "";
+
+  document.getElementById("loginBox").style.display = "block";
+  document.getElementById("app").style.display = "none";
+}
 async function register() {
 
   const nombre = document.getElementById("rnombre").value;
+  if (!nombre || !email || !password) {
+  alert("Completa todos los campos");
+  return;
+}
   const email = document.getElementById("remail").value;
   const password = document.getElementById("rpassword").value;
 
@@ -49,24 +91,25 @@ async function login() {
 
   const data = await res.json();
 
-  console.log("RESPUESTA BACKEND:", data);
-
   if (res.ok && data.token) {
-    
+
     localStorage.setItem("token", data.token);
 
-    const loginBox = document.getElementById("loginBox");
-    const app = document.getElementById("app");
-    
-    loginBox.style.display = "none";
-    app.style.display = "block";
+    document.getElementById("welcomeMsg").textContent =
+  "👋 Bienvenido " + email;
+
+  
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("app").style.display = "block";
     cargarTareas();
 
   } else {
-    alert(data.error ||"Login incorrecto ❌");
+    alert("Login incorrecto ❌");
   }
-
+document.getElementById("email").value = "";
+document.getElementById("password").value = "";
 }
+
 async function cargarTareas() {
   const token = getToken();
   if (!token) {
@@ -202,6 +245,9 @@ async function agregarTarea() {
 
 }
 window.onload = () => {
+  loadTheme();
+  actualizarFechaHora();
+  setInterval(actualizarFechaHora, 1000);
   const token = getToken();
 
   const loginBox = document.getElementById("loginBox");
@@ -214,6 +260,8 @@ window.onload = () => {
   } else {
     loginBox.style.display = "block";
     app.style.display = "none"; 
+
+    document.getElementById("welcomeMsg").textContent = "";
   }
 };
 function togglePassword() {
@@ -240,6 +288,10 @@ function logout() {
   tareasGlobal = [];
 
   document.getElementById("lista").innerHTML = "";
+  
+  document.getElementById("welcomeMsg").textContent = "";
+
   document.getElementById("loginBox").style.display = "block";
   document.getElementById("app").style.display = "none";
+  document.getElementById("themeToggle").checked = false;
 }
