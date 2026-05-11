@@ -12,8 +12,8 @@ function authHeaders() {
 
   return {
     "Content-Type": "application/json",
-    "Authorization": token ? `Bearer ${token}` : ""
-  };
+    ...(token && { "Authorization": `Bearer ${token}` })
+};
 }
 async function register() {
 
@@ -55,9 +55,8 @@ async function login() {
     
     localStorage.setItem("token", data.token);
 
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("app").style.display = "block";
-    
+    loginBox.style.display = "none";
+    app.style.display = "block";
     cargarTareas();
 
   } else {
