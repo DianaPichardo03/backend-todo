@@ -55,6 +55,9 @@ async function login() {
     
     localStorage.setItem("token", data.token);
 
+    const loginBox = document.getElementById("loginBox");
+    const app = document.getElementById("app");
+    
     loginBox.style.display = "none";
     app.style.display = "block";
     cargarTareas();
