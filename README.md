@@ -1,4 +1,7 @@
 # 📝 Proyecto Tareas App Fullstack
+![Node](https://img.shields.io/badge/Node.js-green)
+![Express](https://img.shields.io/badge/Express-black)
+![MySQL](https://img.shields.io/badge/MySQL-blue)
 
 Aplicación web fullstack para gestión de tareas con autenticación de usuarios, desarrollada con Node.js, Express y MySQL en el backend, y JavaScript Vanilla en el frontend.
 
@@ -54,12 +57,13 @@ La aplicación permite registrar usuarios, iniciar sesión con JWT, crear, edita
 
 ## 🏗️ Arquitectura del proyecto
 
-```txt id="arch1"
+```txt 
 Frontend (Vercel)
    ↓ fetch (API REST)
 Backend (Render - Express)
    ↓
 Base de datos (Railway - MySQL)
+```
 
 ## 🌐 API Endpoints
 
@@ -72,6 +76,7 @@ Base de datos (Railway - MySQL)
 | PUT | /api/tasks/:id | Editar tarea |
 | DELETE | /api/tasks/:id | Eliminar tarea |
 
+---
 
 ## ⚙️ Instalación local
 
@@ -84,7 +89,7 @@ git clone https://github.com/DianaPichardo03/backend-todo
 Entrar a la carpeta del proyecto:
 
 ```bash
-cd ProyectoTareas
+cd backend-todo
 ```
 
 Instalar dependencias del backend:
@@ -96,10 +101,8 @@ npm install
 Iniciar servidor:
 
 ```bash
-npm run dev
-```
+npm start
 
----
 
 ## 📸 Screenshots
 
@@ -115,6 +118,13 @@ npm run dev
 <img width="800" src="./assets/modo.png"/>
 
 ---
+
+## 🧠 Lo que aprendí
+
+- Autenticación con JWT
+- Conexión frontend-backend
+- Deploy en Render y Vercel
+- Manejo de CORS
 
 ## 👨‍💻 Autor
 
