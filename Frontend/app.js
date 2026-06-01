@@ -41,6 +41,7 @@ function actualizarFechaHora() {
     });
 }
 
+
 async function register() {
 
   const nombre = document.getElementById("rnombre").value;
