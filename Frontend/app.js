@@ -41,21 +41,11 @@ function actualizarFechaHora() {
     });
 }
 
-function logout() {
-  localStorage.removeItem("token");
-
-  tareasGlobal = [];
-
-  document.getElementById("lista").innerHTML = "";
-
-  document.getElementById("welcomeMsg").textContent = "";
-
-  document.getElementById("loginBox").style.display = "block";
-  document.getElementById("app").style.display = "none";
-}
 async function register() {
 
   const nombre = document.getElementById("rnombre").value;
+  const email = document.getElementById("remail").value;
+  const password = document.getElementById("rpassword").value;
   if (!nombre || !email || !password) {
   alert("Completa todos los campos");
   return;

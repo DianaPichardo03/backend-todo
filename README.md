@@ -103,6 +103,13 @@ Iniciar servidor:
 ```bash
 npm start
 ```
+## 📘 Uso de la aplicación
+
+1. Regístrate con tu correo
+2. Inicia sesión
+3. Agrega tareas en el input
+4. Marca tareas como completadas
+5. Usa filtros para ver tareas
 
 ## 📸 Screenshots
 
